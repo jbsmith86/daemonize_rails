@@ -17,7 +17,7 @@ Then run bundle:
 
 ## Usage
 
-- Place your Rails project in /var/www/projectname
+Place your Rails project in "/var/www/projectname"
 
 Run the generator:
 
