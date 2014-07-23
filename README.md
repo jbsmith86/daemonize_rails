@@ -1,26 +1,42 @@
 # Daemonize Rails
 
-**Intended for use with Debian/Ubuntu, Unicorn and Nginx**
-
-Daemonize Rails will configure your server to add a new process for your rails app in production.
+Daemonize Rails will configure your server to add a new daemon process for your rails app in production.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+**Intended for use with Debian/Ubuntu, Unicorn and Nginx**
+
+Add Daemonize Rails and Unicorn to your Rails app's Gemfile:
 
     gem 'daemonize_rails'
+    gem 'unicorn'
 
-And then execute:
+Then run bundle:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install daemonize_rails
-
 ## Usage
 
-TODO: Write usage instructions here
+- Place your Rails project in /var/www/projectname
+
+Run the generator:
+
+    rails generate daemonize_rails:install
+
+This will create your unicorn.rb and init.d file
+
+Finally, start your app
+
+    $ /etc/init.d/myapp start
+    [myapp][22645]: Trying to start server...
+    [myapp][22668]: server started
+
+You can also
+
+    $ /etc/init.d/myapp stop
+    $ /etc/init.d/myapp restart
+    
+Enjoy!
 
 ## Contributing
 
