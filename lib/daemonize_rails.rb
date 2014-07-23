@@ -57,4 +57,10 @@ module DaemonizeRails
       return binding()
     end
   end
+
+  class String
+    def green
+      "\033[32m#{self}\033[0m"
+    end
+  end
 end

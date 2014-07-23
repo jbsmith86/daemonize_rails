@@ -22,13 +22,14 @@ module DaemonizeRails
         end
         puts `chmod 755 ./config/unicorn.rb`
 
-        init_path = "/etc/init.d/#{@app_name}"
-        create_file init_path do
-            "#{init.make_config_file}"
-        end
-        puts `chmod 755 /etc/init.d/#{app_name}`
-        puts `chmod +x /etc/init.d/#{app_name}`
-        puts `update-rc.d #{app_name} defaults`
+        puts "    create".green + "  /etc/init.d/#{@app_name}"
+        # init_path = "/etc/init.d/#{@app_name}"
+        # create_file init_path do
+        #     "#{init.make_config_file}"
+        # end
+        # puts `chmod 755 /etc/init.d/#{app_name}`
+        # puts `chmod +x /etc/init.d/#{app_name}`
+        # puts `update-rc.d #{app_name} defaults`
       end
     end
   end
