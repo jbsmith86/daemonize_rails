@@ -32,7 +32,8 @@ module DaemonizeRails
 
     def make_config_file
       init_file = ERB.new File.new(File.dirname(__FILE__) + "/init_template.erb").read, nil, "%"
-      init_file.result(@bindings)
+      init_output = open("/etc/init.d/#{@app_name}", 'w') { |f| f.puts init_file.result(@bindings) }
+      init_output.close
     end
   end
 
@@ -55,12 +56,6 @@ module DaemonizeRails
 
     def get_binding
       return binding()
-    end
-  end
-
-  class String
-    def green
-      "\033[32m#{self}\033[0m"
     end
   end
 end
