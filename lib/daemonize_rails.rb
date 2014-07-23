@@ -32,7 +32,8 @@ module DaemonizeRails
 
     def make_config_file
       init_file = ERB.new File.new(File.dirname(__FILE__) + "/init_template.erb").read, nil, "%"
-      init_output = open("/etc/init.d/#{@app_name}", 'w') { |f| f.puts init_file.result(@bindings) }
+      init_path = "/etc/init.d/#{@app_name}"
+      init_output = File.open(init_path, 'w') { |f| f.puts init_file.result(@bindings) }
       init_output.close
     end
   end
