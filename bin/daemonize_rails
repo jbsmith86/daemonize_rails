@@ -2,7 +2,11 @@
 
 require 'daemonize_rails'
 
-app_path = "/var/www/#{app_name}"
+app_path = Dir.pwd
+
+if app_path[/^\/var\/www\/[a-zA-Z0-9\-_.]+/] != app_path
+  raise "Folder check invalid. Please put you Rails project in \"/var/www\""
+end
 
 unicorn_binding = DaemonizeRails::UnicornConfig.new(app_name, workers).get_binding
 init_binding = DaemonizeRails::InitConfig.new(app_name, `echo $PATH`.chomp).get_binding
@@ -10,9 +14,5 @@ init_binding = DaemonizeRails::InitConfig.new(app_name, `echo $PATH`.chomp).get_
 unicorn = DaemonizeRails::Unicorn.new(unicorn_binding, app_name)
 init = DaemonizeRails::Init.new(unicorn_binding, app_name)
 
-if File.exists? app_path
-  unicorn.create_file
-  init.create_file
-else
-  raise "\"#{app_path}\" doesn't exist. Please put you Rails projects in \"/var/www\""
-end
+unicorn.create_file
+init.create_file
