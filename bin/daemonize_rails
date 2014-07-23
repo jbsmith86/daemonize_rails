@@ -1,3 +1,18 @@
 #!/usr/bin/env ruby
 
 require 'daemonize_rails'
+
+app_path = "/var/www/#{app_name}"
+
+unicorn_binding = DaemonizeRails::UnicornConfig.new(app_name, workers).get_binding
+init_binding = DaemonizeRails::InitConfig.new(app_name, `echo $PATH`.chomp).get_binding
+
+unicorn = DaemonizeRails::Unicorn.new(unicorn_binding, app_name)
+init = DaemonizeRails::Init.new(unicorn_binding, app_name)
+
+if File.exists? app_path
+  unicorn.create_file
+  init.create_file
+else
+  raise "\"#{app_path}\" doesn't exist. Please put you Rails projects in \"/var/www\""
+end

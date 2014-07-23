@@ -1,0 +1,91 @@
+#!/bin/bash
+# /etc/init.d/<%= @app_name %>
+
+# ### BEGIN INIT INFO
+# Provides:          <%= @app_name %>
+# Required-Start:    $network $remote_fs $local_fs
+# Required-Stop:     $network $remote_fs $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Stop/start <%= @app_name %>
+### END INIT INFO
+
+export PATH=<%= @path %>
+
+PROJ_NAME="<%= @app_name %>"
+PID_FILE=/var/www/<%= @app_name %>/tmp/pids/unicorn.pid
+OLD_PID_FILE=$PID_FILE.oldbin
+PROJ_DIR=/var/www/<%= @app_name %>
+TAG='[<%= @app_name %>]'
+UNICORN_CONFIG=config/unicorn.rb
+RAILS_ENV=${RAILS_ENV:-production}
+
+# Start the service
+start() {
+    if [[ -f $PID_FILE ]]; then
+        logger -sit $TAG "There is a PID file in $PID_FILE. Service should be running"
+        exit 1
+    else
+        logger -sit "$TAG" "Trying to start server..."
+        cd $PROJ_DIR ; bundle exec unicorn -c $UNICORN_CONFIG -E $RAILS_ENV -D
+        if [[ $? == 0 ]]; then
+            logger -sit "$TAG" "server started"
+        else
+            logger -sit "$TAG" "FAILED to start server"
+            exit 1
+        fi
+    fi
+}
+
+# Stop the service
+stop() {
+        kill -TERM $(cat $PID_FILE)
+        sleep 2
+        if [[ ! -f $PID_FILE ]]; then
+                logger -sit "$TAG" "Server stoped"
+        else
+                logger -sit "$TAG" "FAILED to stop server"
+                exit 1
+        fi
+}
+
+# Reload service
+reload() {
+    logger -sit "$TAG" "Trying to reload server"
+    kill -USR2 $(cat $PID_FILE)
+    sleep 1
+    if [[ -f $OLD_PID_FILE ]]; then
+        logger -sit "$TAG" "Server reloaded"
+    else
+        logger -sit "$TAG" "FAILED to reload server"
+        exit 1
+    fi
+}
+
+restart() {
+        logger -sit "$TAG" "Restarting server"
+        kill -HUP $(cat $PID_FILE)
+}
+
+### main logic ###
+case "$1" in
+    start)
+        start
+        ;;
+
+    stop)
+        stop
+        ;;
+
+    restart)
+        restart
+        ;;
+    reload)
+        reload
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart|reload}"
+        exit 1
+esac
+
+exit 0
