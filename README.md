@@ -44,8 +44,9 @@ You can also
 
 Add the following to /etc/nginx/sites-enabled/nginx.conf
 
+
 ```
-upstream myapp {
+upstream <myapp> {
   server unix:/tmp/unicorn.<myapp>.sock fail_timeout=0;
 }
 
