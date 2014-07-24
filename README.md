@@ -14,6 +14,10 @@ Add Daemonize Rails and Unicorn to your Rails app's Gemfile:
 Then run bundle:
 
     $ bundle
+    
+Install Nginx
+
+    $ sudo apt-get install nginx
 
 ## Usage
 
@@ -35,6 +39,46 @@ You can also
 
     $ /etc/init.d/myapp stop
     $ /etc/init.d/myapp restart
+    
+###Configure Nginx
+
+Add the following to /etc/nginx/sites-enabled/nginx.conf
+
+```
+upstream myapp {
+  server unix:/tmp/unicorn.<myapp>.sock fail_timeout=0;
+}
+
+server {
+    server_name  <mydomain>.com;
+    rewrite ^(.*) http://www.<mydomain>.com$1 permanent;
+}
+
+server {
+  listen 80;
+  server_name www.<mydomain>.com;
+  root /var/www/<myapp>/public;
+
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+  try_files $uri/index.html $uri @<myapp>;
+  location @<myapp> {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://<myapp>;
+  }
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 20M;
+  keepalive_timeout 10;
+}
+
+```
     
 Enjoy!
 
