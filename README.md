@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/daemonize_rails.svg)](http://badge.fury.io/rb/daemonize_rails)
 # Daemonize Rails
 
 Daemonize Rails will configure your server to add a new daemon process for your rails app in production.
