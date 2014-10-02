@@ -36,7 +36,7 @@ module DaemonizeRails
       if ENV["USER"] != "root"
         File.open("./tempfile", 'w') { |f| f.puts init_file.result(@bindings) }
         command = "sh -c 'cat ./tempfile > #{init_path}'"
-        system "sudo -p 'sudo password: ' #{command}"
+        system "sudo -p 'You don't have permissions to update init! enter sudo password: ' #{command}"
       else
         init_output = File.open(init_path, 'w') { |f| f.puts init_file.result(@bindings) }
       end
