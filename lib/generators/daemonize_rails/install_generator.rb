@@ -28,7 +28,7 @@ module DaemonizeRails
         print "\n"
 
         if ENV["USER"] != "root"
-          command_pre = "sudo -p 'You don't have permissions to update init! enter sudo password: ' "
+          command_pre = "sudo -p 'You don't have permissions to update init! Enter sudo password: ' "
         else
           command_pre = ""
         end
