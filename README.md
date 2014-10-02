@@ -5,7 +5,7 @@ Daemonize Rails will configure your server to add a new daemon process for your 
 
 ## Installation
 
-**Intended for use with Debian/Ubuntu, Unicorn and Nginx**
+****Intended for use with Debian/Ubuntu, Unicorn and Nginx****
 
 Add Daemonize Rails and Unicorn to your Rails app's Gemfile:
 
