@@ -1,5 +1,6 @@
 require 'rails/generators'
 require 'rails/generators/base'
+require 'daemonize_rails'
 
 module DaemonizeRails
   class Generators
