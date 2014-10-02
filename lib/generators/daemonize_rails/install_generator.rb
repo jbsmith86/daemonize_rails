@@ -27,11 +27,18 @@ module DaemonizeRails
         print app_name
         print "\n"
 
-        `chmod 755 ./config/unicorn.rb`
-        init_path = "/etc/init.d/#{@app_name}"
-        `chmod 755 /etc/init.d/#{app_name}`
-        `chmod +x /etc/init.d/#{app_name}`
-        `update-rc.d #{app_name} defaults`
+        if ENV["USER"] != "root"
+          command_pre = "sudo -p 'sudo password: ' "
+        else
+          command_pre = ""
+        end
+        commands = ["chmod 755 ./config/unicorn.rb",
+            "chmod 755 /etc/init.d/#{app_name}",
+            "chmod +x /etc/init.d/#{app_name}",
+            "update-rc.d #{app_name} defaults"]
+        commands.each do |command|
+          system command_pre + command
+        end
       end
     end
   end
