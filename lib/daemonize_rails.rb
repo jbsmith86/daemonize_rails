@@ -33,7 +33,13 @@ module DaemonizeRails
     def make_config_file
       init_file = ERB.new File.new(File.dirname(__FILE__) + "/init_template.erb").read, nil, "%"
       init_path = "/etc/init.d/#{@app_name}"
-      init_output = File.open(init_path, 'w') { |f| f.puts init_file.result(@bindings) }
+      if ENV["USER"] != "root"
+        File.open("./tempfile", 'w') { |f| f.puts init_file.result(@bindings) }
+        command = "cat ./tempfile > #{init_path}"
+        system "sudo -p 'sudo password: ' #{command}"
+      else
+        init_output = File.open(init_path, 'w') { |f| f.puts init_file.result(@bindings) }
+      end
     end
   end
 
